@@ -103,7 +103,7 @@ def avg_temp_calculator(years, month, api_key):
         List with year values (formatted as string)
     
     -month: string
-        Number of desired month to calculate average value of temperature, formatted as "0X"
+        Number of desired month to calculate average value of temperature, formatted as MM
     
     -api_key: string
         Secret API key, used as a query parameter
@@ -147,20 +147,31 @@ def run_AEMET():
         fechaIniStr = input_date(date=input('Please paste here the starting date: '))+'.'
         fechaFinStr = input_date(date=input('Please paste here the ending date: '))+'.'
         datos = call_endpoint(fechaIniStr=fechaIniStr, fechaFinStr=fechaFinStr, api_key=api_key, idema=idema)
+        print('Successfully downloaded data. Saving to file...')
+        time.sleep(1)
         file_path = '../datos/AEMET.json'
         write_json(datos, file_path=file_path)
+        print('Saved to file')
     except TypeError as e:
         print(e)
 
 def run_extra():
+    from utils import write_csv
+    import time
+
     api_key = input('Please paste here your api key: ')
-    start_year = input('Write start year: ')
-    end_year = input('Write end year: ')
+    start_year = int(input('Write start year: '))
+    end_year = int(input('Write end year: '))
     years = list(range(start_year, end_year+1))
     years_str = list(map(str, years))
-    august = '08'
-    avg_temps_08 = avg_temp_calculator(years=years_str, month=august, api_key=api_key)
-    return avg_temps_08
+    month = input('Write month as MM: ')
+    print('Calculating average temperature for {}... This will take a while'.format(month))
+    avg_temps_month = avg_temp_calculator(years=years_str, month=month, api_key=api_key)
+    print('Successfully calculated average temperature. Saving to file...')
+    time.sleep(1)
+    file_path = '../datos/avg_temos.csv'
+    write_csv(avg_temps_month, file_path=file_path)
+    print('Saved to file')
     
 
 if __name__=='__main__':

@@ -71,3 +71,22 @@ def write_json(dic, file_path):
     import json
     with open(file_path, "w") as f:
         json.dump(dic, f)
+
+def write_csv(matrix, file_path):
+    """
+    Function used to write data to CSV in a specified file_path
+
+    Params:
+    -matrix: matrix
+        Python matrix to be written to file
+
+    -file_path: string
+        final location of the file
+
+    """
+    import csv
+    with open(file_path, "w") as f:
+        writer = csv.writer(f, delimiter=';')
+        for row in matrix:
+            writer.writerow(row)
+

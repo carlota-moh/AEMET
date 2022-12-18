@@ -16,4 +16,5 @@ def main():
 
 if __name__ == '__main__':
     print('Loading...')
+    time.sleep(3)
     main()
