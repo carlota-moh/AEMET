@@ -126,12 +126,12 @@ def avg_temp_calculator(years, month, api_key):
             else:
                 temp_year.append(float(dato['tmed'].replace(',','.')))
         temp_media = round(sum(temp_year)/len(temp_year), 1)
-        temps.append(temp_media)
+        temps.append([temp_media])
     return temps
 
 
 def run_AEMET():
-    from utils import input_url, input_date, write_json
+    from .utils import input_url, input_date, write_json
     import time
     
     try:
@@ -149,14 +149,14 @@ def run_AEMET():
         datos = call_endpoint(fechaIniStr=fechaIniStr, fechaFinStr=fechaFinStr, api_key=api_key, idema=idema)
         print('Successfully downloaded data. Saving to file...')
         time.sleep(1)
-        file_path = '../datos/AEMET.json'
+        file_path = './datos/AEMET.json'
         write_json(datos, file_path=file_path)
         print('Saved to file')
     except TypeError as e:
         print(e)
 
 def run_extra():
-    from utils import write_csv
+    from .utils import write_csv
     import time
 
     api_key = input('Please paste here your api key: ')
@@ -165,11 +165,12 @@ def run_extra():
     years = list(range(start_year, end_year+1))
     years_str = list(map(str, years))
     month = input('Write month as MM: ')
-    print('Calculating average temperature for {}... This will take a while'.format(month))
+    print('Calculating average temperature for month #{}... This will take a while'.format(month))
     avg_temps_month = avg_temp_calculator(years=years_str, month=month, api_key=api_key)
+    print(avg_temps_month)
     print('Successfully calculated average temperature. Saving to file...')
     time.sleep(1)
-    file_path = '../datos/avg_temos.csv'
+    file_path = './datos/avg_temps.csv'
     write_csv(avg_temps_month, file_path=file_path)
     print('Saved to file')
     
