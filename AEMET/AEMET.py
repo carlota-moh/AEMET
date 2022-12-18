@@ -55,7 +55,7 @@ def get_indicative(station_data, station_name):
 # station_name = 'MADRID, CIUDAD UNIVERSITARIA'
 # idema = get_indicative(station_data=station_data, station_name=station_name)
 
-def call_endpoint(fechaIniStr, fechaFinStr, idema, api_key):
+def call_endpoint(fechaIniStr, fechaFinStr, api_key, **kwargs):
     """
     Funtion used for calling "climatologías diarias" endpoint
 
@@ -66,8 +66,8 @@ def call_endpoint(fechaIniStr, fechaFinStr, idema, api_key):
     -fechaFinStr: string
         End date
     
-    -idema: string
-        indicative value for the desired station
+    -**kwrags: dictionary
+        optional parameters for calling the endpoint
     
     Returns:
     -data: array with dictionaries
@@ -77,8 +77,12 @@ def call_endpoint(fechaIniStr, fechaFinStr, idema, api_key):
         Secret API key, used as a query parameter
     
     """
-    format_url = "https://opendata.aemet.es/opendata/api/valores/climatologicos/diarios/datos/fechaini/"\
-                +fechaIniStr+"/fechafin/"+fechaFinStr+"/estacion/"+idema
+    if 'idema' in kwargs.keys():
+        format_url = "https://opendata.aemet.es/opendata/api/valores/climatologicos/diarios/datos/fechaini/"\
+                    +fechaIniStr+"/fechafin/"+fechaFinStr+"/estacion/"+kwargs['idema']
+    else:
+        format_url = "https://opendata.aemet.es/opendata/api/valores/climatologicos/diarios/datos/fechaini/"\
+        +fechaIniStr+"/fechafin/"+fechaFinStr+"/todasestaciones"
 
     datos = extract_data(format_url, api_key=api_key)
     return datos
@@ -105,11 +109,15 @@ def run_AEMET():
         idema = get_indicative(station_data=station_data, station_name=station_name)
         fechaIniStr = input_date(date=input('Please paste here the starting date: '))+'.'
         fechaFinStr = input_date(date=input('Please paste here the ending date: '))+'.'
-        datos = call_endpoint(fechaIniStr=fechaIniStr, fechaFinStr=fechaFinStr, idema=idema, api_key=api_key)
+        datos = call_endpoint(fechaIniStr=fechaIniStr, fechaFinStr=fechaFinStr, api_key=api_key, idema=idema)
         file_path = '../datos/AEMET.json'
         write_json(datos, file_path=file_path)
     except TypeError as e:
         print(e)
+
+def run_extra():
+    pass
+    
 
 if __name__=='__main__':
     run_AEMET()
