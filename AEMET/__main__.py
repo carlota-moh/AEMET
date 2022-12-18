@@ -12,7 +12,7 @@ def main():
         run_AEMET()
 
     elif "EXTRA" in arguments:
-        pass
+        run_extra()
 
 if __name__ == '__main__':
     print('Loading...')

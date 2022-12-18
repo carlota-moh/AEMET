@@ -90,8 +90,45 @@ def call_endpoint(fechaIniStr, fechaFinStr, api_key, **kwargs):
 # fechaIniStr = "2019-10-01T00:00:00UTC."
 # fechaFinStr = "2019-10-30T23:59:59UTC."
 
-# datos = call_endpoint(fechaIniStr=fechaIniStr, fechaFinStr=fechaFinStr, idema=idema, api_key=secret_key)
+# datos = call_endpoint(fechaIniStr=fechaIniStr, fechaFinStr=fechaFinStr, api_key=api_key, idema=idema)
 # print(datos)
+
+def avg_temp_calculator(years, month, api_key):
+    """
+    Function used to calculate average temperature for a particular month
+    in a range of years
+
+    Params:
+    -years: list
+        List with year values (formatted as string)
+    
+    -month: string
+        Number of desired month to calculate average value of temperature, formatted as "0X"
+    
+    -api_key: string
+        Secret API key, used as a query parameter
+
+    Returns:
+    -temps: list, len(years)
+        List containing average value of temperature for the selected month 
+        for each year in years.
+    """
+
+    temps = []
+    for year in years:
+        fechaIniStr = year+"-"+month+"-01T00:00:00UTC."
+        fechaFinStr = year+"-"+month+"-31T23:59:59UTC."
+        datos = call_endpoint(fechaIniStr=fechaIniStr, fechaFinStr=fechaFinStr, api_key=api_key)
+        temp_year = []
+        for dato in datos:
+            if 'tmed' not in dato.keys():
+                continue
+            else:
+                temp_year.append(float(dato['tmed'].replace(',','.')))
+        temp_media = round(sum(temp_year)/len(temp_year), 1)
+        temps.append(temp_media)
+    return temps
+
 
 def run_AEMET():
     from utils import input_url, input_date, write_json
@@ -116,7 +153,14 @@ def run_AEMET():
         print(e)
 
 def run_extra():
-    pass
+    api_key = input('Please paste here your api key: ')
+    start_year = input('Write start year: ')
+    end_year = input('Write end year: ')
+    years = list(range(start_year, end_year+1))
+    years_str = list(map(str, years))
+    august = '08'
+    avg_temps_08 = avg_temp_calculator(years=years_str, month=august, api_key=api_key)
+    return avg_temps_08
     
 
 if __name__=='__main__':
