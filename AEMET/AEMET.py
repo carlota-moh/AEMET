@@ -106,7 +106,7 @@ def run_AEMET():
         fechaIniStr = input_date(date=input('Please paste here the starting date: '))+'.'
         fechaFinStr = input_date(date=input('Please paste here the ending date: '))+'.'
         datos = call_endpoint(fechaIniStr=fechaIniStr, fechaFinStr=fechaFinStr, idema=idema, api_key=api_key)
-        file_path = './datos/AEMET.json'
+        file_path = '../datos/AEMET.json'
         write_json(datos, file_path=file_path)
     except TypeError as e:
         print(e)
