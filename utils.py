@@ -58,5 +58,5 @@ def input_date(date):
 
 def write_json(dic, file_path):
     import json
-    with open(file_path, “w”) as f:
+    with open(file_path, "w") as f:
         json.dump(dic, f)
